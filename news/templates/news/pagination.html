@@ -1,10 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% if page_obj.paginator.num_pages > 1 %}
+<nav aria-label="Постраничная навигация">
+    {% if page_obj.has_previous %}
+        <a href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&amp;{% endif %}page=1">Первая</a>
+        <a href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Назад</a>
+    {% endif %}
+
+    {% for number in page_obj.paginator.get_elided_page_range %}
+        {% if number == page_obj.paginator.ELLIPSIS %}
+            <span>{{ number }}</span>
+        {% elif number == page_obj.number %}
+            <strong>{{ number }}</strong>
+        {% else %}
+            <a href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&amp;{% endif %}page={{ number }}">{{ number }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Вперёд</a>
+        <a href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&amp;{% endif %}page={{ page_obj.paginator.num_pages }}">Последняя</a>
+    {% endif %}
+</nav>
+{% endif %}
